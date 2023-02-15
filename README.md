@@ -1,13 +1,13 @@
-# @bmayhew/playwright-json-summary-reporter
+# playwright-json-summary-reporter
 
-![npm (scoped)](https://img.shields.io/npm/v/@butchmayhew/playwright-json-summary-reporter)
+![npm (scoped)](https://img.shields.io/npm/v/playwright-json-summary-reporter)
 
 This package can be installed to generate a simple `summary.json` file that can be used as apart of a `Playwright Test` automation framework. My main use case for building this is to have quick access to a list of failed or succeeded tests for re-running failures (outside of playwright's retry functionality). I also use this as a way to quickly identify if all tests passed within a github action.
 
 ## Install
 
 ```bash
-npm install @butchmayhew/playwright-json-summary-reporter --save-dev
+npm install playwright-json-summary-reporter --save-dev
 ```
 
 ## Usage
@@ -16,7 +16,7 @@ Modify your `playwright.config.ts` file to include the reporter:
 
 ```js
   reporter: [
-    ['@butchmayhew/playwright-json-summary-reporter'],
+    ['playwright-json-summary-reporter'],
     ['html'], // other reporters
     ['dot']
   ],
