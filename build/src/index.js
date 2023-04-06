@@ -36,7 +36,7 @@ var JSONSummaryReporter = /** @class */ (function () {
         var status = !['passed', 'skipped'].includes(result.status) && t.includes('@warn')
             ? 'warned'
             : result.status;
-        this[status].push(z);
+        this[status].push(t);
     };
     JSONSummaryReporter.prototype.onEnd = function (result) {
         var _this = this;
