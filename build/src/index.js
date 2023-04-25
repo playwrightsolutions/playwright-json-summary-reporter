@@ -8,6 +8,7 @@ var JSONSummaryReporter = /** @class */ (function () {
         this.skipped = [];
         this.failed = [];
         this.warned = [];
+        this.interrupted = [];
         this.timedOut = [];
         this.status = 'unknown';
         this.startedAt = 0;
@@ -31,7 +32,7 @@ var JSONSummaryReporter = /** @class */ (function () {
         }
         // This will publish the file name + line number test begins on
         var z = "".concat(fileName[0], ":").concat(test.location.line, ":").concat(test.location.column);
-        // Using the t variable in the push will push a full test test name + test description
+        // Using the t variable in the push will push a full test name + test description
         var t = title.join(' > ');
         var status = !['passed', 'skipped'].includes(result.status) && t.includes('@warn')
             ? 'warned'
@@ -48,8 +49,13 @@ var JSONSummaryReporter = /** @class */ (function () {
         });
         // removing duplicate and flakey (passed on a retry) tests from the failed array
         this.failed = this.failed.filter(function (element, index) {
-            if (!_this.passed.includes(element))
-                return _this.failed.indexOf(element) === index;
+            var isRealFailure = false;
+            var isNotFlaky = !_this.passed.includes(element);
+            if (isNotFlaky) {
+                var isNotDuplicate = _this.failed.indexOf(element) === index;
+                isRealFailure = isNotDuplicate;
+            }
+            return isRealFailure;
         });
         fs.writeFileSync('./summary.json', JSON.stringify(this, null, '  '));
     };

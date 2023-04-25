@@ -12,6 +12,7 @@ export interface Summary {
   skipped: string[];
   failed: string[];
   warned: string[];
+  interrupted: string[];
   timedOut: string[];
   status: FullResult['status'] | 'unknown' | 'warned' | 'skipped';
 }
@@ -22,6 +23,7 @@ class JSONSummaryReporter implements Reporter, Summary {
   skipped: string[] = [];
   failed: string[] = [];
   warned: string[] = [];
+  interrupted: string[] = [];
   timedOut: string[] = [];
 
   status: Summary['status'] = 'unknown';
@@ -47,7 +49,7 @@ class JSONSummaryReporter implements Reporter, Summary {
     // This will publish the file name + line number test begins on
     const z = `${fileName[0]}:${test.location.line}:${test.location.column}`;
 
-    // Using the t variable in the push will push a full test test name + test description
+    // Using the t variable in the push will push a full test name + test description
     const t = title.join(' > ');
 
     const status =
@@ -68,8 +70,13 @@ class JSONSummaryReporter implements Reporter, Summary {
 
     // removing duplicate and flakey (passed on a retry) tests from the failed array
     this.failed = this.failed.filter((element, index) => {
-      if (!this.passed.includes(element))
-        return this.failed.indexOf(element) === index;
+      let isRealFailure = false;
+      const isNotFlaky = !this.passed.includes(element);
+      if (isNotFlaky) {
+        const isNotDuplicate = this.failed.indexOf(element) === index;
+        isRealFailure = isNotDuplicate;
+      }
+      return isRealFailure;
     });
 
     fs.writeFileSync('./summary.json', JSON.stringify(this, null, '  '));
