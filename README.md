@@ -26,34 +26,38 @@ Now when you run a test there should be a new file `summary.json` that gets save
 
 ```json
 {
-  "durationInMS": 41565,
+  "durationInMS": 3260,
   "passed": [
-    "api/create-user-account.spec.ts:34:3",
-    "api/create-user-account.spec.ts:55:3",
-    "api/delete-user-account.spec.ts:47:3",
-    "api/login.spec.ts:12:3",
-    "api/login.spec.ts:37:3",
-    "api/login.spec.ts:61:3",
-    "api/login.spec.ts:84:3",
-    "ui/codepen/copyToClipboard.spec.ts:5:1",
-    "ui/codepen/copyToClipboard.spec.ts:17:1",
-    "ui/internet.app/selectPresentElement.spec.ts:10:1",
-    "ui/internet.app/selectPresentElement.spec.ts:35:1",
-    "ui/grep.spec.ts:4:3",
-    "ui/grep.spec.ts:9:3",
-    "ui/loginUser.spec.ts:22:3",
-    "ui/loginUserNoImages.spec.ts:23:3",
-    "ui/loginUser.spec.ts:37:3",
-    "ui/loginUserNoImages.spec.ts:40:3",
-    "ui/registerUser.spec.ts:17:1"
+    "before.setup.ts:3:6",
+    "after.teardown.ts:3:9",
+    "tests.spec.ts:6:7",
+    "tests.spec.ts:9:7",
+    "tests.spec.ts:12:7",
+    "tests.spec.ts:18:7",
+    "tests.spec.ts:28:7"
   ],
-  "skipped": [],
-  "failed": [],
+  "skipped": [
+    "tests.spec.ts:21:8"
+  ],
+  "failed": [
+    "tests.spec.ts:15:7"
+  ],
   "warned": [],
-  "timedOut": [],
-  "status": "passed",
-  "startedAt": 1674431153277
+  "interrupted": [],
+  "timedOut": [
+    "tests.spec.ts:24:7"
+  ],
+  "flakey": [
+    "tests.spec.ts:18:7"
+  ],
+  "status": "failed",
+  "startedAt": 1696537674443
 }
 ```
 
 If you found this helpful feel free to check out <https://playwrightsolutions.com>!
+
+**Note:** 
+
+* This reporter doesn't support parameterized tests.
+* The tests that are listed in flakey are also listed in the passed array, but not in the failed array. This was a decision that I made as the test eventually passed.
