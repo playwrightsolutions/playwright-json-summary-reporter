@@ -1,6 +1,6 @@
 {
   "name": "playwright-json-summary-reporter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Simple Playwright Reporter",
   "license": "MIT",
   "repository": "playwrightsolutions/playwright-json-summary-reporter",
