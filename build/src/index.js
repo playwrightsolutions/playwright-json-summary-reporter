@@ -8,7 +8,9 @@ var JSONSummaryReporter = /** @class */ (function () {
         this.skipped = [];
         this.failed = [];
         this.warned = [];
+        this.interrupted = [];
         this.timedOut = [];
+        this.flakey = [];
         this.status = 'unknown';
         this.startedAt = 0;
     }
@@ -25,17 +27,25 @@ var JSONSummaryReporter = /** @class */ (function () {
                 continue;
             clean = false;
             title.push(s);
-            if (s.includes('spec.ts')) {
+            if (s.includes('.ts') || s.includes('.js')) {
                 fileName.push(s);
             }
         }
         // This will publish the file name + line number test begins on
         var z = "".concat(fileName[0], ":").concat(test.location.line, ":").concat(test.location.column);
-        // Using the t variable in the push will push a full test test name + test description
+        // Using the t variable in the push will push a full test name + test description
         var t = title.join(' > ');
+        // Set the status
         var status = !['passed', 'skipped'].includes(result.status) && t.includes('@warn')
             ? 'warned'
             : result.status;
+        // Logic to push the results into the correct array
+        if (result.status === 'passed' && result.retry >= 1) {
+            this.flakey.push(z);
+        }
+        else {
+            this[status].push(z);
+        }
         this[status].push(z);
     };
     JSONSummaryReporter.prototype.onEnd = function (result) {
@@ -46,10 +56,22 @@ var JSONSummaryReporter = /** @class */ (function () {
         this.passed = this.passed.filter(function (element, index) {
             return _this.passed.indexOf(element) === index;
         });
-        // removing duplicate and flakey (passed on a retry) tests from the failed array
+        // removing duplicate tests from the failed array
         this.failed = this.failed.filter(function (element, index) {
             if (!_this.passed.includes(element))
                 return _this.failed.indexOf(element) === index;
+        });
+        // removing duplicate tests from the skipped array
+        this.skipped = this.skipped.filter(function (element, index) {
+            return _this.skipped.indexOf(element) === index;
+        });
+        // removing duplicate tests from the timedOut array
+        this.timedOut = this.timedOut.filter(function (element, index) {
+            return _this.timedOut.indexOf(element) === index;
+        });
+        // removing duplicate tests from the interrupted array
+        this.interrupted = this.interrupted.filter(function (element, index) {
+            return _this.interrupted.indexOf(element) === index;
         });
         fs.writeFileSync('./summary.json', JSON.stringify(this, null, '  '));
     };
